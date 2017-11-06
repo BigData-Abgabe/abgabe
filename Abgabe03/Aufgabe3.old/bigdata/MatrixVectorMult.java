@@ -1,11 +1,14 @@
 package bigdata;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
@@ -22,9 +25,8 @@ public class MatrixVectorMult {
         if (args.length < 2)
             printUsageAndQuit();
         Configuration conf = new Configuration();
-        conf.addResource("vector");
-/*
-		//DoubleListWritable vector = new DoubleListWritable();
+
+		DoubleListWritable vector = new DoubleListWritable();
 		
 		BufferedReader br = null; //read vector manually and save under configuration
 		FileReader fr = null;
@@ -57,7 +59,7 @@ public class MatrixVectorMult {
 				}
 
 			}
-*/
+
 
 
 
@@ -65,14 +67,11 @@ public class MatrixVectorMult {
         job.setJarByClass(MatrixVectorMult.class);
         job.setMapperClass(MVMultMapper.class);
         job.setReducerClass(MVMultReducer.class);
-        job.setInputFormatClass(KeyValueTextInputFormat.class);
-        job.setMapOutputKeyClass(IntWritable.class);
-        
-        job.setOutputKeyClass(IntWritable.class);
+
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(DoubleListWritable.class);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileInputFormat.addInputPath(job, new Path(args[1]));
         FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);

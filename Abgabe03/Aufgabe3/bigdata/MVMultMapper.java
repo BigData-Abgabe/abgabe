@@ -1,45 +1,31 @@
 package bigdata;
 
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-public class MVMultMapper extends Mapper<Object, Text, Text, DoubleListWritable> {
-    private Text key = new Text();
-    private DoubleListWritable value = new DoubleListWritable();
-	private double tmp; 
-	private Configuration conf= context.getConfiguration();
-	private StringTokenizer vector = new StringTokenizer(conf.get("vector")) //get vector element
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class MVMultMapper extends Mapper<Text, Text, IntWritable, DoubleListWritable> {
     @Override
-    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-        String valString = value.toString();
-        if(valString.startsWith("#"))
-            // This line is a comment
-            return;
-        
-		StringTokenizer itr = new StringTokenizer(value.toString());
-        
-        // Return if line is missing cols
-        if(!itr.hasMoreTokens())
-        	return;
-        
-        // First col as key
-        key = itr.nextToken();
-		// vector name is not needed
-		vector.nextToken();
-		
-        if(!itr.hasMoreTokens())
-        	return;
-        
-        // Other cols as value
+    public void map(Text k, Text val, Context context) throws IOException, InterruptedException {
+    	
+    	DoubleListWritable value = new DoubleListWritable();
+    	
+    	if(k.toString().equalsIgnoreCase("V")) {
+    		// This is our vector
+    		context.getConfiguration().set("vector", val.toString());
+    		return;
+    	}
+    	
+    	
+    	StringTokenizer line = new StringTokenizer(k.toString());
        
-        while (!itr.hasMoreTokens())
-			// mutiply one row of the matrix with the vector and save row into list
-			value.add(Double.parseDouble(itr.nextToken())*Double.parseDouble(vector.nextToken()));
-		 
-		context.write(key, value);	
+        while (line.hasMoreTokens())
+			value.add(Double.parseDouble(line.nextToken()));
+        
+		context.write(new IntWritable(Integer.parseInt(k.toString())), value);	
         	
 
     }

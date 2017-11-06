@@ -1,25 +1,36 @@
 package bigdata;
 
 
-java.util.ArrayList
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class DoubleListWritable implements Writable {
+import org.apache.hadoop.io.Writable;
+
+public class DoubleListWritable implements Writable,Iterable<Double> {
           
-       private List<Double> list = new ArrayList<Double>;
+       private List<Double> list = new ArrayList<Double>();
 
-       
+       @Override
        public void write(DataOutput out) throws IOException {
 		  for (double d:list)       
-			out.writeInt(d);
-         
+			out.writeDouble(d);
        }
        
+       @Override
        public void readFields(DataInput in) throws IOException {
          
-		 String tmp = in.readLine();
-		 String[] s = tmp.split('/t')
-		 for (i = 1; s.length(); i++)
-			list.add(Double.parseDouble(s[i]))
+    	 while(true) {
+    		 try {
+    			 list.add(in.readDouble());
+    		 } catch (EOFException eofex) {
+    			 break;
+    		 }
+    	 }
          
        }
        
@@ -29,7 +40,7 @@ public class DoubleListWritable implements Writable {
          return w;
        }
 
- 		public void getList() {
+ 		public List<Double> getList() {
          return list;
          
        }
@@ -40,9 +51,14 @@ public class DoubleListWritable implements Writable {
        }
 
 		public void setList(double... doubles) {
-		 for (double d: doubles
+		 for (double d: doubles)
          	list.add(d);
          
        }
+
+		@Override
+		public Iterator<Double> iterator() {
+			return list.iterator();
+		}
 
      }
