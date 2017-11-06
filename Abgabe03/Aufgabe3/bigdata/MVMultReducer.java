@@ -1,29 +1,30 @@
 package bigdata;
 
 import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class MVMultReducer extends Reducer<Text, DoubleListWritable, Text, DoubleWritable> {
+public class MVMultReducer extends Reducer<IntWritable, DoubleListWritable, IntWritable, DoubleWritable> {
 
     @Override
-    public void reduce(Text key, Iterable<DoubleListWritable> values, Context context) throws IOException, InterruptedException {
+    public void reduce(IntWritable key, Iterable<DoubleListWritable> values, Context context) throws IOException, InterruptedException {
 	
 
 		double result = 0;
-        private List<Double> tmp = new ArrayList<Double>;
-
+		
+		DoubleListWritable vector = new DoubleListWritable();
+		String vectstring = context.getConfiguration().get("vector");
+		StringTokenizer vectitr = new StringTokenizer(vectstring);
+		while (vectitr.hasMoreTokens())
+			vector.add(Double.parseDouble(vectitr.nextToken()));
     	
-    	// add all values of a row in values
-    	for (DoubleListWritable value: values)
-    		tmp=values.getList();
-			for(Double d:tmp)
-				result += d
-    	
+		for(DoubleListWritable value: values)
+			for(int i = 0; i < vector.getList().size(); ++i)
+				result += vector.getList().get(i).doubleValue() * value.getList().get(i);
+    			
 		context.write(key, new DoubleWritable(result));
 		
     		     	

@@ -1,0 +1,4 @@
+To be run using bin/hadoop jar MatrixVectorMult.jar <matrix> <vector> <outdir>
+
+Fails with NullPointerExceptions in Reducer Line 20 because the confvar is empty. why?
+I didn't find any other way to make the vector available to all reduce jobs. 
