@@ -1,0 +1,1 @@
+Aufruf mit bin/hadoop jar s04a1-0.0.1-SNAPSHOT.jar bigdata.SimpleStatistics <in> <out> [-D stats.col={1,2}] 
