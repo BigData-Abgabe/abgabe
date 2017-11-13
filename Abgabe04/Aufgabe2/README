@@ -1,0 +1,1 @@
+Aufruf mit bin/hadoop jar bigdata-0.0.1-SNAPSHOT.jar bigdata.ThreeLetterCode <in> <in> <out>
