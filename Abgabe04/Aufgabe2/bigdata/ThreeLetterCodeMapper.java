@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 
 public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
@@ -29,7 +30,6 @@ public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
 	Map<String, String> letterCode = new HashMap<String, String>();
 	
 	static enum CountersEnum{ AA, Proteins }
-	
 	
 	@Override
 	public void setup(Context context) 
@@ -49,11 +49,25 @@ public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
 		try{
 			fis= new BufferedReader(new FileReader(fileName));
 			String line= null;
-			String[] map;
+			String[] map = new String[2];
+			int counter;
 			while((line= fis.readLine()) != null) {
-				map= line.split("/t");
+				StringTokenizer itr = new StringTokenizer(line);
+				counter = 0;
+				while (itr.hasMoreTokens()) {
+					if (counter < 2){
+						map[counter] = itr.nextToken();
+						counter++;
+					}
+					else 
+						break;
+				}
+				// System.out.println(line);
+				// System.out.println("Here is map : "+map[0]+"_"+map[1]);
 				letterCode.put(map[0],map[1]);
 			}
+			
+					
 		} catch (IOException e) {
 			System.err.println("Caughtexceptionwhileparsingthecachedfile'"+ StringUtils.stringifyException(e));
 		}
@@ -64,9 +78,10 @@ public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
 		   
 		String protein = value.toString();;
 		String threeCode= "";
+		Character c;
 		 
 		//Counts proteins
-		Counter proteins= context.getCounter(CountersEnum.class.getName(),CountersEnum.AA.toString());
+		Counter proteins= context.getCounter(CountersEnum.class.getName(),CountersEnum.Proteins.toString());
 		proteins.increment(1);
 		
 		for (int i = 0; i < protein.length();i++){
@@ -76,7 +91,8 @@ public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
 			amino.increment(1);
 			
 			// converts one letter code in three letter code if pattern is given
-			String tmp = letterCode.get( protein.charAt(i) );
+			c=protein.charAt(i);
+			String tmp = letterCode.get(c.toString() );
 			if ( tmp != null ){
 				threeCode += tmp;  
 			}
@@ -84,10 +100,12 @@ public class ThreeLetterCodeMapper extends Mapper<Object, Text, Text, Text> {
 				System.out.println( protein.charAt(i)+" is not inplemented in Aminosäuredatei" );
 		}
 		
+		//System.out.println( "New: "+threeCode );
 		aa.set(key.toString());
 		prot.set(threeCode);
 
 		context.write(aa, prot);
 		
+	
 	}
 }
