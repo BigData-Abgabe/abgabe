@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>Group_05</groupId>
+  <artifactId>sheet06_1</artifactId>
+  <version>v1</version>
+  <packaging>jar</packaging>
+
+  <name>sheet06_1</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+<dependencies>
+    <dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>2.7.1</version>
+    </dependency>
+    <dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-common</artifactId>
+		<version>2.7.1</version>
+	</dependency>
+	<dependency>
+    	<groupId>jdk.tools</groupId>
+    	<artifactId>jdk.tools</artifactId>
+    	<scope>system</scope>
+    	<version>1.8.0</version>
+    	<systemPath>C:\Program Files\Java\jdk1.8.0_131\lib\tools.jar</systemPath>
+	</dependency>
+  </dependencies>
+</project>
