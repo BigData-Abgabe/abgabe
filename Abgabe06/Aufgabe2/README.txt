@@ -1,0 +1,1 @@
+USAGE: bin/hadoop jar BagOperations.jar bigdata.BagOperations -D operation=bagunion <Eingabepfad R> <Eingabepfad S> <Ausgabepfad>
