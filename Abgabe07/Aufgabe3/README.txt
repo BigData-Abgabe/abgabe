@@ -1,0 +1,1 @@
+USAGE: bin/hadoop jar MatrixHadoop.jar bigdata.MatrixMultiplication <Pfad Matrix A> <Pfad Matrix B> <Anzahl Zeilen A> <Anzahl Spalten B> <Ausgabepfad>
